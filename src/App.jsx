@@ -40,7 +40,7 @@ const App = () => {
   const [inputs, setInputs] = useState({
     lat: 51.33,
     lon: -0.74,
-    range: 80,
+    range: 20,
   });
 
   const [aircraft, setAircraft] = useState([]);
