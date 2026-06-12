@@ -3,11 +3,18 @@ import React, { useState, useEffect } from 'react';
 // --- PREDEFINED AIRPORTS ---
 const AIRPORTS = [
   { name: "Custom / Manual", lat: "", lon: "" },
-  { name: "London Heathrow (LHR)", lat: 51.4700, lon: -0.4543 },
-  { name: "Paris CDG (CDG)", lat: 49.0097, lon: 2.5479 },
-  { name: "Brussels (BRU)", lat: 50.9014, lon: 4.4844 },
   { name: "Amsterdam (AMS)", lat: 52.3105, lon: 4.7683 },
-  { name: "Frankfurt (FRA)", lat: 50.0333, lon: 8.5705 }
+  { name: "Beijing Capital (PEK)", lat: 40.0799, lon: 116.6031 },
+  { name: "Brussels (BRU)", lat: 50.9014, lon: 4.4844 },
+  { name: "Dubai (DXB)", lat: 25.2532, lon: 55.3657 },
+  { name: "Frankfurt (FRA)", lat: 50.0333, lon: 8.5705 },
+  { name: "Hong Kong (HKG)", lat: 22.3080, lon: 113.9185 },
+  { name: "London Heathrow (LHR)", lat: 51.4700, lon: -0.4543 },
+  { name: "Los Angeles (LAX)", lat: 33.9416, lon: -118.4085 },
+  { name: "Madrid (MAD)", lat: 40.4719, lon: -3.5626 },
+  { name: "New York (JFK)", lat: 40.6413, lon: -73.7781 },
+  { name: "Paris CDG (CDG)", lat: 49.0097, lon: 2.5479 },
+  { name: "Singapore (SIN)", lat: 1.3644, lon: 103.9915 }
 ];
 
 // --- MATH HELPERS ---
