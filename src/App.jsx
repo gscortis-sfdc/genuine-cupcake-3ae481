@@ -44,13 +44,13 @@ const App = () => {
   const [config, setConfig] = useState({
     lat: 51.4700, // Default to Heathrow
     lon: -0.4543,
-    range: 80,
+    range: 20,
   });
 
   const [inputs, setInputs] = useState({
     lat: 51.4700,
     lon: -0.4543,
-    range: 80,
+    range: 20,
   });
 
   const [aircraft, setAircraft] = useState([]);
