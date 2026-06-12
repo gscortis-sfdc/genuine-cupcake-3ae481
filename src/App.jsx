@@ -49,14 +49,14 @@ const calculateBearing = (lat1, lon1, lat2, lon2) => {
 
 const App = () => {
   const [config, setConfig] = useState({
-    lat: 51.4700,
-    lon: -0.4543,
+    lat: 51.336111,
+    lon: -0.726058,
     range: 20,
   });
 
   const [inputs, setInputs] = useState({
-    lat: 51.4700,
-    lon: -0.4543,
+    lat: 51.336111,
+    lon: -0.726058,
     range: 20,
   });
 
