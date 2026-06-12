@@ -49,7 +49,7 @@ const calculateBearing = (lat1, lon1, lat2, lon2) => {
 
 const App = () => {
   const [config, setConfig] = useState({
-    lat: 51.4700, // Default to Heathrow
+    lat: 51.4700,
     lon: -0.4543,
     range: 20,
   });
@@ -64,9 +64,12 @@ const App = () => {
   const [error, setError] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
 
+  // NEW: Display Toggle States (defaulting to true)
+  const [showDirections, setShowDirections] = useState(true);
+  const [showRangeText, setShowRangeText] = useState(true);
+
   const maxRangeKm = config.range * 1.852;
 
-  // Handle Dropdown Selection
   const handleAirportSelect = (e) => {
     const selectedName = e.target.value;
     if (selectedName === "Custom / Manual") return; 
@@ -184,7 +187,6 @@ const App = () => {
             </button>
           </div>
 
-          {/* NEW: Airport Dropdown */}
           <div style={styles.dropdownGroup}>
             <label style={{ fontSize: '12px' }}>Quick Select:</label>
             <select onChange={handleAirportSelect} style={styles.select}>
@@ -225,7 +227,30 @@ const App = () => {
               style={styles.input}
             />
           </div>
-          <button type="submit" style={styles.button}>UPDATE RADAR</button>
+
+          {/* NEW: Display Toggles */}
+          <div style={{ borderTop: '1px solid #00ff0040', paddingTop: '8px', marginTop: '4px' }}>
+            <div style={styles.toggleGroup}>
+              <label style={styles.toggleLabel}>Show N/S/E/W</label>
+              <input 
+                type="checkbox" 
+                checked={showDirections} 
+                onChange={(e) => setShowDirections(e.target.checked)}
+                style={styles.checkbox}
+              />
+            </div>
+            <div style={styles.toggleGroup}>
+              <label style={styles.toggleLabel}>Show Range</label>
+              <input 
+                type="checkbox" 
+                checked={showRangeText} 
+                onChange={(e) => setShowRangeText(e.target.checked)}
+                style={styles.checkbox}
+              />
+            </div>
+          </div>
+
+          <button type="submit" style={styles.button}>UPDATE MAP</button>
         </form>
       )}
 
@@ -233,11 +258,31 @@ const App = () => {
 
       <div style={styles.radarWrapper}>
         <div style={styles.radarCircle}>
+          
           <div style={{...styles.ring, width: '75%', height: '75%'}}></div>
           <div style={{...styles.ring, width: '50%', height: '50%'}}></div>
           <div style={{...styles.ring, width: '25%', height: '25%'}}></div>
+          
           <div style={styles.horizontalLine}></div>
           <div style={styles.verticalLine}></div>
+
+          {/* Conditionally Render Direction Labels */}
+          {showDirections && (
+            <>
+              <div style={{...styles.directionText, top: '4px', left: '50%', transform: 'translateX(-50%)'}}>N</div>
+              <div style={{...styles.directionText, bottom: '4px', left: '50%', transform: 'translateX(-50%)'}}>S</div>
+              <div style={{...styles.directionText, right: '8px', top: '50%', transform: 'translateY(-50%)'}}>E</div>
+              <div style={{...styles.directionText, left: '8px', top: '50%', transform: 'translateY(-50%)'}}>W</div>
+            </>
+          )}
+
+          {/* Conditionally Render Range Indicator */}
+          {showRangeText && (
+            <div style={styles.rangeText}>
+              {config.range} NM
+            </div>
+          )}
+
           <div style={styles.sweep}></div>
 
           {aircraft.map((plane) => {
@@ -324,7 +369,7 @@ const styles = {
     gap: '12px',
     zIndex: 20,
     boxShadow: '0 4px 6px rgba(0,0,0,0.5)',
-    minWidth: '220px', // Ensures the panel is wide enough for the dropdown
+    minWidth: '220px', 
   },
   panelTitle: {
     fontWeight: 'bold',
@@ -359,6 +404,23 @@ const styles = {
     width: '90px',
     fontFamily: 'monospace',
     outline: 'none',
+  },
+  // NEW: Styles for the toggle checkboxes
+  toggleGroup: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '4px 0',
+  },
+  toggleLabel: {
+    fontSize: '12px',
+    color: '#00ff00',
+  },
+  checkbox: {
+    cursor: 'pointer',
+    accentColor: '#00ff00', // Uses native browser styling to make the box green
+    width: '16px',
+    height: '16px',
   },
   button: {
     backgroundColor: '#00ff0020',
@@ -423,6 +485,27 @@ const styles = {
     width: '1px',
     height: '100%',
     backgroundColor: '#00ff0040',
+  },
+  directionText: {
+    position: 'absolute',
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: '14px',
+    zIndex: 5,
+    pointerEvents: 'none',
+    textShadow: '0 0 4px #000',
+  },
+  rangeText: {
+    position: 'absolute',
+    top: '50%',
+    right: '25px', 
+    transform: 'translateY(-100%)', 
+    color: '#ffffff',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    zIndex: 5,
+    pointerEvents: 'none',
+    textShadow: '0 0 4px #000',
   },
   sweep: {
     position: 'absolute',
