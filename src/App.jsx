@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
+// --- PREDEFINED AIRPORTS ---
+const AIRPORTS = [
+  { name: "Custom / Manual", lat: "", lon: "" },
+  { name: "London Heathrow (LHR)", lat: 51.4700, lon: -0.4543 },
+  { name: "Paris CDG (CDG)", lat: 49.0097, lon: 2.5479 },
+  { name: "Brussels (BRU)", lat: 50.9014, lon: 4.4844 },
+  { name: "Amsterdam (AMS)", lat: 52.3105, lon: 4.7683 },
+  { name: "Frankfurt (FRA)", lat: 50.0333, lon: 8.5705 }
+];
+
 // --- MATH HELPERS ---
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -32,24 +42,37 @@ const calculateBearing = (lat1, lon1, lat2, lon2) => {
 
 const App = () => {
   const [config, setConfig] = useState({
-    lat: 51.33,
-    lon: -0.74,
-    range: 20,
+    lat: 51.4700, // Default to Heathrow
+    lon: -0.4543,
+    range: 80,
   });
 
   const [inputs, setInputs] = useState({
-    lat: 51.33,
-    lon: -0.74,
-    range: 20,
+    lat: 51.4700,
+    lon: -0.4543,
+    range: 80,
   });
 
   const [aircraft, setAircraft] = useState([]);
   const [error, setError] = useState(null);
-  
-  // NEW: State to track if the settings panel is open
   const [showSettings, setShowSettings] = useState(false);
 
   const maxRangeKm = config.range * 1.852;
+
+  // Handle Dropdown Selection
+  const handleAirportSelect = (e) => {
+    const selectedName = e.target.value;
+    if (selectedName === "Custom / Manual") return; 
+
+    const airport = AIRPORTS.find(a => a.name === selectedName);
+    if (airport) {
+      setInputs({
+        ...inputs,
+        lat: airport.lat,
+        lon: airport.lon
+      });
+    }
+  };
 
   const handleUpdate = (e) => {
     e.preventDefault();
@@ -59,7 +82,7 @@ const App = () => {
       range: parseFloat(inputs.range),
     });
     setAircraft([]);
-    setShowSettings(false); // Optionally auto-close the panel after updating
+    setShowSettings(false); 
   };
 
   useEffect(() => {
@@ -134,7 +157,6 @@ const App = () => {
         `}
       </style>
 
-      {/* Conditionally render the button OR the form */}
       {!showSettings ? (
         <button 
           onClick={() => setShowSettings(true)} 
@@ -154,6 +176,19 @@ const App = () => {
               ✕
             </button>
           </div>
+
+          {/* NEW: Airport Dropdown */}
+          <div style={styles.dropdownGroup}>
+            <label style={{ fontSize: '12px' }}>Quick Select:</label>
+            <select onChange={handleAirportSelect} style={styles.select}>
+              {AIRPORTS.map((airport) => (
+                <option key={airport.name} value={airport.name}>
+                  {airport.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div style={styles.inputGroup}>
             <label>Lat:</label>
             <input 
@@ -238,7 +273,6 @@ const styles = {
     overflow: 'hidden',
     position: 'relative',
   },
-  // NEW: Styles for the toggle buttons
   openButton: {
     position: 'absolute',
     top: '20px',
@@ -270,7 +304,6 @@ const styles = {
     cursor: 'pointer',
     padding: '0 4px',
   },
-  // Previous styles...
   controlPanel: {
     position: 'absolute',
     top: '20px',
@@ -284,9 +317,26 @@ const styles = {
     gap: '12px',
     zIndex: 20,
     boxShadow: '0 4px 6px rgba(0,0,0,0.5)',
+    minWidth: '220px', // Ensures the panel is wide enough for the dropdown
   },
   panelTitle: {
     fontWeight: 'bold',
+  },
+  dropdownGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
+    marginBottom: '4px',
+  },
+  select: {
+    backgroundColor: '#050a05',
+    border: '1px solid #00ff0040',
+    color: '#00ff00',
+    padding: '6px',
+    fontFamily: 'monospace',
+    outline: 'none',
+    width: '100%',
+    cursor: 'pointer',
   },
   inputGroup: {
     display: 'flex',
@@ -299,7 +349,7 @@ const styles = {
     border: '1px solid #00ff0040',
     color: '#00ff00',
     padding: '4px 8px',
-    width: '80px',
+    width: '90px',
     fontFamily: 'monospace',
     outline: 'none',
   },
